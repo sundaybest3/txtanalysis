@@ -1,0 +1,27 @@
+from google.colab import auth
+auth.authenticate_user()
+
+# 2. 라이브러리 불러오기
+import gspread
+from google.auth import default
+import pandas as pd
+
+# 3. 인증 및 연결
+creds, _ = default()
+gc = gspread.authorize(creds)
+
+# 4. Google Sheets 열기
+spreadsheet = gc.open("High School Textbook Dialogue data_first analysis")   # 시트 이름 입력
+worksheet = spreadsheet.sheet1             # 첫 번째 시트
+
+# 5. 데이터를 DataFrame으로 변환
+data = worksheet.get_all_records()
+df = pd.DataFrame(data)
+
+# 6. 특정 열 전체 word count
+column_name = "Script"   # word count 할 열 이름
+
+text = " ".join(df[column_name].dropna())
+word_count = len(text.split())
+
+print("Total word count:", word_count)
